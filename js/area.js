@@ -175,6 +175,7 @@ const areaVars = {
 	}
 }
 
+var areaTick;
 function startArea(zone, area) {
 	player.switchTab('area', 'play');
 	player.inArea = true;
@@ -183,7 +184,7 @@ function startArea(zone, area) {
 
 	areaVars.player.direction = getArea(zone, area).startDir;
 	
-	setInterval(progressArea, player.TBM);
+	areaTick = setInterval(progressArea, player.TBM);
 	
 	renderArea();
 }

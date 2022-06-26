@@ -29,6 +29,10 @@ function encounterEnemy(id) {
 	return true;
 }
 
+function encounterMultiEnemy(enemies) {
+	
+}
+
 function battleTurn(id) {
 	if (!player.inBattle) return false;
 
@@ -121,9 +125,10 @@ function decreaseStuff() {
 	return true;
 }
 
-function forfeitFight() {
-	player.switchTab('enemy');
+function forfeitJourney() {
+	player.switchTab('area', 'select');
+	player.inArea = false;
 	player.inBattle = false;
 	document.getElementById('battle-end').style.display = 'none';
-	clearInterval(battleTurns);
+	clearInterval(areaTick);
 }
