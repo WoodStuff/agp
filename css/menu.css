@@ -56,3 +56,6 @@ p.section-subtitle {
     margin: 0;
     transform: translateY(-2em);
 }
+p.nomargin {
+	margin: 0;
+}

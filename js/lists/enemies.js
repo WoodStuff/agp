@@ -1,5 +1,3 @@
-const enemynames = ['redsquare', 'greensquare', 'bluesquare'];
-
 const ENEMIES = [
 	{
 		name: 'Red Square',
@@ -8,7 +6,7 @@ const ENEMIES = [
 		curr: d(5), xp: d(5), levelt: d(2), type: 'normal',
 		accyfactor: d(1), drops: 0, id: 'redsquare',
 		isBoss: false, group: 'square',
-		img: '../media/enemies/redsquare.png',
+		img: 'media/enemies/redsquare.png',
 		rbuworth: d(15),
 		spawner: {
 			level: [0, 1],
@@ -22,7 +20,7 @@ const ENEMIES = [
 		curr: d(10), xp: d(10), levelt: d(3), type: 'normal',
 		accyfactor: d(1), drops: 0, id: 'greensquare',
 		isBoss: false, group: 'square',
-		img: '../media/enemies/greensquare.png',
+		img: 'media/enemies/greensquare.png',
 		rbuworth: d(20),
 		spawner: {
 			level: [1],
@@ -36,11 +34,32 @@ const ENEMIES = [
 		curr: d(15), xp: d(15), levelt: d(4), type: 'normal',
 		accyfactor: d(1), drops: 0, id: 'bluesquare',
 		isBoss: false, group: 'square',
-		img: '../media/enemies/bluesquare.png',
+		img: 'media/enemies/bluesquare.png',
 		rbuworth: d(30),
 		spawner: {
 			level: [1, 2],
 			chance: [5, 65],
 		},
 	},
+	{
+		name: 'White Square',
+		desc: 'Came out to battle younger than allowed. The police is currently trying to find him.',
+		atk: d(1), hp: d(4), accy: d(66), blk: d(0),
+		curr: d(2), xp: d(2), levelt: d(2), type: 'normal',
+		accyfactor: d(1), drops: 0, id: 'whitesquare',
+		isBoss: false, group: 'square',
+		img: 'media/enemies/whitesquare.png',
+		rbuworth: d(5),
+		spawner: {
+			level: [-1],
+			chance: [100],
+		},
+	},
 ];
+
+const enemynames = [];
+for (const en in ENEMIES) {
+	if (Object.hasOwnProperty.call(ENEMIES, en)) {
+		enemynames.push(ENEMIES[en].id);
+	}
+}

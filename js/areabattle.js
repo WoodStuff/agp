@@ -1,16 +1,4 @@
-var playerHP, playerMaxHP, playerATK, playerACCY, playerBLK, playerMiss;
-var enemyHP, enemyMaxHP, enemyATK, enemyACCY, enemyBLK, enemyMiss, factor;
-var battleTurns;
-var pastEHP, pastPHP;
-
-function fightEnemy(id) {
-	if (!player.spawner.content.includes(id)) return false;
-
-	let index = player.spawner.content.indexOf(id);
-	if (index > -1) {
-		player.spawner.content.splice(index, 1);
-	}
-
+function encounterEnemy(id) {
 	player.switchTab('enemy', 'battle');
 	player.inBattle = true;
 
