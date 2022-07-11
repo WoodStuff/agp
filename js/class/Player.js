@@ -47,13 +47,13 @@ class Player {
 			level: 1,
 			limit: 3,
 			content: [],
-			bestlevel: 1,
 		};
 		this.buffs = [];
 		this.bars = {
 			basic: {
 				progress: new Decimal(0),
 				max: new Decimal(6),
+				total: new Decimal(0),
 				activated: new Decimal(0),
 			},
 		};
@@ -86,6 +86,7 @@ class Player {
 	}
 	addRBU(amount) {
 		this.rbu.current = this.rbu.current.add(amount);
+		this.rbu.gained = this.rbu.gained.add(amount);
 	}
 
 	spawnerMaxed() {

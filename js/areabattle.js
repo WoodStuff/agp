@@ -1,4 +1,4 @@
-function encounterEnemy(id) {
+function encounterEnemy(id, buff = 1) {
 	player.switchTab('enemy', 'battle');
 	player.inBattle = true;
 
@@ -8,11 +8,11 @@ function encounterEnemy(id) {
 	playerACCY = player.accy;
 	playerBLK = player.block;
 
-	enemyHP = getEnemy(id).hp;
-	enemyMaxHP = getEnemy(id).hp;
-	enemyATK = getEnemy(id).atk;
+	enemyHP = getEnemy(id).hp.times(buff);
+	enemyMaxHP = getEnemy(id).hp.times(buff);
+	enemyATK = getEnemy(id).atk.times(buff);
 	enemyACCY = getEnemy(id).accy;
-	enemyBLK = getEnemy(id).blk;
+	enemyBLK = getEnemy(id).blk.times(buff);
 	factor = getEnemy(id).accyfactor;
 
 	document.getElementById('battle-rewards').style.display = 'none';
