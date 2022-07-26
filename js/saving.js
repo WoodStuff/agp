@@ -31,12 +31,15 @@ function load(savefile = 'agpSave') {
 	const startData = new Player();
 	for (const v in startData) if (player[v] == undefined) player[v] = startData[v];
 
-	player.switchTab(player.tab);
+	player.switchTab(player.tab/*,'finish'*/);
 	startUpdateStats();
 
 	for (enemy of player.spawner.content) {
 		renderEnemy(enemy);
 	}
+
+	player.inBattle = false;
+	player.inArea = false;
 
 	return true;
 }

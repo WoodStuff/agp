@@ -24,8 +24,9 @@ class Player {
 		this.shield = 0;
 		this.inBattle = false;
 		this.inArea = false;
-		this.TBA = 1200;
+		this.TBA = 800;
 		this.TBM = 600;
+		this.areaReward = 5;
 		this.tilesUnlocked = [
 			'enemy',
 		];

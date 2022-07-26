@@ -26,3 +26,10 @@ function removeValue(array, value) {
 function el(e) {
 	return document.getElementById(e);
 }
+
+function setByClass(c, value, prop, prop2 = undefined) {
+	for (const element of document.getElementsByClassName(c)) {
+		if (prop2) element[prop][prop2] = value;
+		else element[prop] = value;
+	}
+}

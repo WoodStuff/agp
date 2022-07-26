@@ -2,8 +2,8 @@ const AREAS = [
 	[ // zone 0
 		{
 			area: [0, 0], // this means the map is 0-0 aka zone 0 and area 0
-			name: 'First Journey',
-			desc: 'The first map, that marks the beginning of your adventure',
+			name: 'Enemy Plains',
+			desc: 'Progressing through areas requires beating multiple enemies',
 			dp: 10,
 			rewards: {
 				currency: new Decimal(15),
@@ -11,7 +11,7 @@ const AREAS = [
 			},
 			startDir: DIR.right,
 			data: [ // the map itself
-				's   r w   e',
+				's e',
 			],
 			key: {
 				' ': 'c-path',
@@ -33,7 +33,7 @@ const AREAS = [
 			area: [0, 1],
 			name: 'White Chain',
 			desc: 'Four white squares, should be able to survive',
-			dp: 10,
+			dp: 15,
 			rewards: {
 				currency: new Decimal(15),
 				xp: new Decimal(15),

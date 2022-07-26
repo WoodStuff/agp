@@ -71,27 +71,6 @@ div.side {
 }
 
 
-p#battle-title, p#battle-result {
-	font-size: 600%;
-}
-p#battle-title, p.battle-stat, p#battle-result {
-	display: block;
-	text-align: center;
-	font-family: monospace;
-	margin: 0;
-}
-p.battle-stat {
-	font-size: 200%;
-}
-div#battle-end {
-	top: calc(30% + 150px + 8em);
-	position: absolute;
-	width: 100%;
-	height: 10%;
-}
-p.battle-stat span {
-	font-family: monospace;
-}
 
 .nomargin {
 	margin: 0;
@@ -106,7 +85,7 @@ img#toggle-spawn-img:active, div.enemy:active, button#collect-rbu:active, button
 div#first-rb:active, div#prev-rb:active, div#next-rb:active, div#last-rb:active, .consumable-item:active,
 div#first-zone:active, div#prev-zone:active, div#next-zone:active, div#last-zone:active, button#select-zone:active,
 button#go-to-area-diffs:active, button.area-box:active {
-	filter: brightness(80%);
+	filter: brightness(80%) !important;
 }
 
 div#first-rb:hover, div#prev-rb:hover, div#next-rb:hover, div#last-rb:hover, .consumable-item:hover,

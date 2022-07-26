@@ -3,39 +3,40 @@ var enemyHP, enemyMaxHP, enemyATK, enemyACCY, enemyBLK, enemyMiss, factor;
 var battleTurns;
 var pastEHP, pastPHP;
 
-function fightEnemy(id) {
-	if (!player.spawner.content.includes(id)) return false;
-
+function fightEnemy(id, buff = 1) {
 	let index = player.spawner.content.indexOf(id);
 	if (index > -1) {
 		player.spawner.content.splice(index, 1);
 	}
 
-	player.switchTab('enemy', 'battle');
+	if (player.inArea) player.switchTab('area', 'fight');
+	else player.switchTab('enemy', 'battle');
 	player.inBattle = true;
 
-	playerHP = player.maxhp;
-	playerMaxHP = player.maxhp;
+	if (!player.inArea) {
+		playerHP = player.maxhp;
+		playerMaxHP = player.maxhp;
+	}
 	playerATK = player.attack;
 	playerACCY = player.accy;
 	playerBLK = player.block;
 
-	enemyHP = getEnemy(id).hp;
-	enemyMaxHP = getEnemy(id).hp;
-	enemyATK = getEnemy(id).atk;
+	enemyHP = getEnemy(id).hp.times(buff);
+	enemyMaxHP = getEnemy(id).hp.times(buff);
+	enemyATK = getEnemy(id).atk.times(buff);
 	enemyACCY = getEnemy(id).accy;
-	enemyBLK = getEnemy(id).blk;
+	enemyBLK = getEnemy(id).blk.times(buff);
 	factor = getEnemy(id).accyfactor;
 
-	document.getElementById('battle-rewards').style.display = 'none';
-	document.getElementById('battle-title').innerHTML = `Vs. ${getEnemy(id).name}`;
-	document.getElementById('battle-enemy-img').src = `${getEnemy(id).img}`;
+	setByClass('battle-rewards', 'none', 'style', 'display')
+	setByClass('battle-title', `Vs. ${getEnemy(id).name}`, 'innerHTML')
+	setByClass('battle-enemy-img', `${getEnemy(id).img}`, 'src')
 	
 	updateBattleStats(true);
-	document.getElementById('battle-player-decrease').style.transition = '0s';
-	document.getElementById('battle-enemy-decrease').style.transition = '0s';
-	document.getElementById('battle-player-decrease').style.color = '#00000000';
-	document.getElementById('battle-enemy-decrease').style.color = '#00000000';
+	setByClass('battle-player-decrease', '0s', 'style', 'transition')
+	setByClass('battle-player-decrease', '#00000000', 'style', 'color')
+	setByClass('battle-enemy-decrease', '0s', 'style', 'transition')
+	setByClass('battle-enemy-decrease', '#00000000', 'style', 'color')
 
 	battleTurns = setInterval(() => { battleTurn(id) }, player.TBA);
 	return true;
@@ -61,15 +62,29 @@ function battleTurn(id) {
 	if (!(enemyHP.lte(0) || playerHP.lte(0))) return; // battle has ended if continues past this
 
 	clearInterval(battleTurns);
-	document.getElementById('battle-end').style.display = 'block';
+	setByClass('battle-end', 'block', 'style', 'display');
+	setByClass('battle-end-message', player.inArea ? 'Returning in a bit.' : 'Click the button at the top left to exit.', 'innerHTML')
+	
+	if (enemyHP.lte(0) && !playerHP.lte(0)) win();
+	if (enemyHP.lte(0) && playerHP.lte(0)) {
+		if (player.inArea) lose();
+		else tie();
+	}
+	if (!enemyHP.lte(0) && playerHP.lte(0)) lose();
 
-	if (enemyHP.lte(0) && !playerHP.lte(0)) { // win
-		//console.log('win');
 
-		document.getElementById('battle-result').innerHTML = 'You won!';
-		document.getElementById('battle-rewards').style.display = 'block';
-		document.getElementById('b-cr-value').innerHTML = format(getEnemy(id).curr);
-		document.getElementById('b-xp-value').innerHTML = format(getEnemy(id).xp);
+	function win(regenerateRBU = true) {
+		setByClass('battle-result', 'You won!', 'innerHTML');
+		setByClass('battle-rewards', 'block', 'style', 'display');
+		setByClass('b-cr-value', format(getEnemy(id).curr), 'innerHTML');
+		setByClass('b-xp-value', format(getEnemy(id).xp), 'innerHTML');
+
+		if (player.inArea) setTimeout(() => {
+			player.switchTab('area', 'play');
+			player.inBattle = false;
+			setByClass('battle-end', 'none', 'style', 'display');
+			areaVars.invulnerable = true;
+		}, player.TBA * 1.5);
 
 		player.addCurrency(getEnemy(id).curr);
 		player.addXP(getEnemy(id).xp);
@@ -77,20 +92,23 @@ function battleTurn(id) {
 		player.battles.total++;
 		player.battles.won++;
 
-		if (player.rbu.disabled) player.rbu.cooldown--;
+		if (player.rbu.disabled && regenerateRBU) player.rbu.cooldown--;
 	}
-	if (enemyHP.lte(0) && playerHP.lte(0)) { // tie
-		//console.log('tie');
-
-		document.getElementById('battle-result').innerHTML = 'It\'s a tie!';
+	function tie() {
+		setByClass('battle-result', 'It\'s a tie!', 'innerHTML');
 
 		player.battles.total++;
 		player.battles.tied++;
 	}
-	if (!enemyHP.lte(0) && playerHP.lte(0)) { // loss
-		//console.log('loss');
+	function lose() {
+		setByClass('battle-result', `${getEnemy(id).name} won!`, 'innerHTML');
 
-		document.getElementById('battle-result').innerHTML = `${getEnemy(id).name} won!`;
+		if (player.inArea) setTimeout(() => {
+			selectArea();
+			player.inArea = false;
+			player.inBattle = false;
+			player.areas.lost++;
+		}, player.TBA * 1.5);
 
 		player.battles.total++;
 		player.battles.lost++;
@@ -102,33 +120,33 @@ function customTurns(id) {
 }
 
 function updateBattleStats(first = false) {
-	document.getElementById('battle-player-hp').innerHTML = `${format(playerHP)}/${format(playerMaxHP)} HP`;
-	document.getElementById('battle-player-atk').innerHTML = `${format(playerATK)} ATK`;
-	document.getElementById('battle-player-accy').innerHTML = `${format(playerACCY)} ACCY`;
-	document.getElementById('battle-player-blk').innerHTML = `${format(playerBLK)} BLK`;
+	setByClass('battle-player-hp', `${format(playerHP)}/${format(playerMaxHP)} HP`, 'innerHTML');
+	setByClass('battle-player-atk', `${format(playerATK)} ATK`, 'innerHTML');
+	setByClass('battle-player-accy', `${format(playerACCY)} ACCY`, 'innerHTML');
+	setByClass('battle-player-blk', `${format(playerBLK)} BLK`, 'innerHTML');
 
-	document.getElementById('battle-enemy-hp').innerHTML = `${format(enemyHP)}/${format(enemyMaxHP)} HP`;
-	document.getElementById('battle-enemy-atk').innerHTML = `${format(enemyATK)} ATK`;
-	document.getElementById('battle-enemy-accy').innerHTML = `${format(enemyACCY)} ACCY`;
-	document.getElementById('battle-enemy-blk').innerHTML = `${format(enemyBLK)} BLK`;
+	setByClass('battle-enemy-hp', `${format(enemyHP)}/${format(enemyMaxHP)} HP`, 'innerHTML');
+	setByClass('battle-enemy-atk', `${format(enemyATK)} ATK`, 'innerHTML');
+	setByClass('battle-enemy-accy', `${format(enemyACCY)} ACCY`, 'innerHTML');
+	setByClass('battle-enemy-blk', `${format(enemyBLK)} BLK`, 'innerHTML');
 
 	if (first) return true;
-	document.getElementById('battle-player-decrease').innerHTML = enemyMiss ? 'Missed!' : `${(pastPHP.sub(playerHP)) * -1}`;
-	document.getElementById('battle-enemy-decrease').innerHTML = playerMiss ? 'Missed!' : `${(pastEHP.sub(enemyHP)) * -1}`;
-	document.getElementById('battle-player-decrease').style.color = '#790000';
-	document.getElementById('battle-enemy-decrease').style.color = '#790000';
+	setByClass('battle-player-decrease', enemyMiss ? 'Missed!' : `${(pastPHP.sub(playerHP)) * -1}`, 'innerHTML');
+	setByClass('battle-enemy-decrease', playerMiss ? 'Missed!' : `${(pastEHP.sub(enemyHP)) * -1}`, 'innerHTML');
+	setByClass('battle-player-decrease', '#00000099', 'style', 'color');
+	setByClass('battle-enemy-decrease', '#00000099', 'style', 'color');
 	setTimeout(decreaseStuff, 200);
 	return true;
 }
 
 function decreaseStuff() {
-	document.getElementById('battle-player-decrease').style.transition = '0.8s';
-	document.getElementById('battle-enemy-decrease').style.transition = '0.8s';
-	document.getElementById('battle-player-decrease').style.color = '#00000000';
-	document.getElementById('battle-enemy-decrease').style.color = '#00000000';
+	setByClass('battle-player-decrease', '0.8s', 'style', 'transition');
+	setByClass('battle-enemy-decrease', '0.8s', 'style', 'transition');
+	setByClass('battle-player-decrease', '#00000000', 'style', 'color');
+	setByClass('battle-enemy-decrease', '#00000000', 'style', 'color');
 	setTimeout(() => {
-		document.getElementById('battle-player-decrease').style.transition = '0s';
-		document.getElementById('battle-enemy-decrease').style.transition = '0s';
+		setByClass('battle-player-decrease', '0s', 'style', 'transition');
+		setByClass('battle-enemy-decrease', '0s', 'style', 'transition');
 	}, 520)
 	return true;
 }
@@ -136,6 +154,6 @@ function decreaseStuff() {
 function forfeitFight() {
 	player.switchTab('enemy');
 	player.inBattle = false;
-	document.getElementById('battle-end').style.display = 'none';
+	setByClass('battle-end', 'none', 'style', 'display');
 	clearInterval(battleTurns);
 }

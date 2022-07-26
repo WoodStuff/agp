@@ -62,7 +62,8 @@ function renderEnemy(id) {
 	}
 	enemydiv.onclick = function() {
 		this.remove();
-		fightEnemy(this.classList[1].slice(6), true);
+		player.inArea = false; // needed because the background becomes orange if you save in an area battle
+		fightEnemy(this.classList[1].slice(6));
 		return false;
 	}
 

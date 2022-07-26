@@ -39,6 +39,7 @@ function startUpdateStats() {
 		document.getElementById('rbu-per-collect').innerHTML = player.rbu.collect;
 
 		if (!(player.inBattle || player.inArea)) {
+			console.log('a');
 			player.attack = calcstats.attack();
 			player.maxhp = calcstats.hp();
 			player.hp = calcstats.hp();

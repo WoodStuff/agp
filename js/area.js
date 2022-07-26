@@ -168,6 +168,7 @@ const areaVars = {
 	tileSize: 1,
 	spawnX: -1,
 	spawnY: -1,
+	invulnerable: false,
 	player: {
 		x: 0,
 		y: 0,
@@ -178,18 +179,34 @@ const areaVars = {
 var areaTick;
 function startArea(zone, area) {
 	player.switchTab('area', 'play');
+	player.inBattle = false; // needed because you can't progress in areas until you battle an enemy if you unfortunately save in an area battle
 	player.inArea = true;
 	areaVars.zone = zone;
 	areaVars.area = area;
+	document.getElementById('area-current-title').innerHTML = `Area ${zone}-${area}: ${getArea(zone, area).name}`;
 
 	areaVars.player.direction = getArea(zone, area).startDir;
 	
 	areaTick = setInterval(progressArea, player.TBM);
+
+	playerHP = player.maxhp;
+	playerMaxHP = player.maxhp;
 	
 	renderArea();
 }
 
 function progressArea() {
+	if (!player.inArea) { // reset everything
+		clearInterval(areaTick);
+		areaVars.player = {
+			x: 0,
+			y: 0,
+			direction: DIR.up,
+		}
+		setByClass('battle-end', 'none', 'style', 'display');
+		return;
+	}
+	
 	// BM = before movement
 	const tileAtBM = getMeaning(getArea(areaVars.zone, areaVars.area),
 		getArea(areaVars.zone, areaVars.area).data[areaVars.player.y].charAt(areaVars.player.x));
@@ -198,37 +215,46 @@ function progressArea() {
 		areaVars.player.direction = DIR[tileAtBM.name];
 	}
 
-	if (tileAtBM.category == 'enemy') {
-		if (!tileAtBM.name == 'multi') {
-			
+	if (!player.inBattle) {
+		if (tileAtBM.category == 'enemy' && !areaVars.invulnerable) {
+			player.inBattle = true;
+			if (!tileAtBM.name == 'multi') {
+				
+			}
+			else {
+				fightEnemy(tileAtBM.name);
+			}
 		}
+		else {
+			switch (areaVars.player.direction) {
+				case DIR.up:
+					areaVars.player.y--;
+					break;
+
+				case DIR.left:
+					areaVars.player.x--;
+					break;
+
+				case DIR.down:
+					areaVars.player.y++;
+					break;
+
+				case DIR.right:
+					areaVars.player.x++;
+					break;
+			
+				default:
+					break;
+			}
+		}
+		areaVars.invulnerable = false;
 	}
 
-	switch (areaVars.player.direction) {
-		case DIR.up:
-			areaVars.player.y--;
-			break;
-
-		case DIR.left:
-			areaVars.player.x--;
-			break;
-
-		case DIR.down:
-			areaVars.player.y++;
-			break;
-
-		case DIR.right:
-			areaVars.player.x++;
-			break;
-	
-		default:
-			break;
-	}
+	if (tileAtBM.category == 'control' && tileAtBM.name == 'end') winBattle();
 
 	// AM = after movement
 	const tileAtAM = getMeaning(getArea(areaVars.zone, areaVars.area),
 		getArea(areaVars.zone, areaVars.area).data[areaVars.player.y].charAt(areaVars.player.x));
-
 }
 
 function renderArea() {
@@ -294,7 +320,23 @@ function renderArea() {
 	}
 
 
+	if (!player.inArea) return;
+
 	requestAnimationFrame(renderArea);
+}
+
+function winBattle() {
+	player.switchTab('area', 'finish');
+
+	document.getElementById('area-finish-title').innerHTML = `Area ${zone}-${area} Clear!`;
+}
+
+function forfeitJourney() {
+	player.switchTab('area', 'select');
+	player.inArea = false;
+	player.inBattle = false;
+	setByClass('battle-end', 'none', 'style', 'display');
+	clearInterval(areaTick);
 }
 
 function getArea(p1, p2) { // function overloading lmao

@@ -86,29 +86,29 @@
 
 					<div class="subsection" id="enemy-battle" style="display:none;">
 						<div class="forfeit" onclick="forfeitFight()"></div>
-						<p id="battle-title">Vs. Red Square</p>
-						<div id="battle-player">
-							<p class="battle-stat" id="battle-player-decrease">-1</p>
-							<p class="battle-stat" id="battle-player-hp">10/10</p>
-							<img id="battle-player-img" src="media/player.png">
-							<p class="battle-stat" id="battle-player-atk">2 ATK</p>
-							<p class="battle-stat" id="battle-player-accy">75 ACCY</p>
-							<p class="battle-stat" id="battle-player-blk">0 BLK</p>
+						<p class="battle-title">Vs. Red Square</p>
+						<div class="battle-player">
+							<p class="battle-stat battle-player-decrease">-1</p>
+							<p class="battle-stat battle-player-hp">10/10</p>
+							<img class="battle-player-img" src="media/player.png">
+							<p class="battle-stat battle-player-atk">2 ATK</p>
+							<p class="battle-stat battle-player-accy">75 ACCY</p>
+							<p class="battle-stat battle-player-blk">0 BLK</p>
 						</div>
-						<div id="battle-enemy">
-							<p class="battle-stat" id="battle-enemy-decrease">-1</p>
-							<p class="battle-stat" id="battle-enemy-hp">100/100</p>
-							<img id="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
-							<p class="battle-stat" id="battle-enemy-atk">10 ATK</p>
-							<p class="battle-stat" id="battle-enemy-accy">85 ACCY</p>
-							<p class="battle-stat" id="battle-enemy-blk">5 BLK</p>
+						<div class="battle-enemy">
+							<p class="battle-stat battle-enemy-decrease">-1</p>
+							<p class="battle-stat battle-enemy-hp">100/100</p>
+							<img class="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
+							<p class="battle-stat battle-enemy-atk">10 ATK</p>
+							<p class="battle-stat battle-enemy-accy">85 ACCY</p>
+							<p class="battle-stat battle-enemy-blk">5 BLK</p>
 						</div>
-						<div id="battle-end" style="display:none;">
-							<p id="battle-result">Somebody won!</p>
-							<p class="battle-stat">Click the button at the top left to exit.</p>
-							<div id="battle-rewards">
-								<p class="battle-stat" id="battle-currency-reward">+<span id="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
-								<p class="battle-stat" id="battle-xp-reward">+<span id="b-xp-value">0</span> XP</p>
+						<div class="battle-end" style="display:none;">
+							<p class="battle-result">Somebody won!</p>
+							<p class="battle-stat battle-end-message">Click the button at the top left to exit.</p>
+							<div class="battle-rewards">
+								<p class="battle-stat battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+								<p class="battle-stat battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
 							</div>
 						</div>
 					</div>
@@ -160,7 +160,40 @@
 
 					<div class="subsection" id="area-fight" style="display:none;">
 						<div class="forfeit" onclick="forfeitJourney()"></div>
-						<p id="area-current-title" class="section-title nomargin">Vs. Red Square</p>
+						<p class="battle-title">Vs. Red Square</p>
+						<div class="battle-player">
+							<p class="battle-stat battle-player-decrease">-1</p>
+							<p class="battle-stat battle-player-hp">10/10</p>
+							<img class="battle-player-img" src="media/player.png">
+							<p class="battle-stat battle-player-atk">2 ATK</p>
+							<p class="battle-stat battle-player-accy">75 ACCY</p>
+							<p class="battle-stat battle-player-blk">0 BLK</p>
+						</div>
+						<div class="battle-enemy">
+							<p class="battle-stat battle-enemy-decrease">-1</p>
+							<p class="battle-stat battle-enemy-hp">100/100</p>
+							<img class="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
+							<p class="battle-stat battle-enemy-atk">10 ATK</p>
+							<p class="battle-stat battle-enemy-accy">85 ACCY</p>
+							<p class="battle-stat battle-enemy-blk">5 BLK</p>
+						</div>
+						<div class="battle-end" style="display:none;">
+							<p class="battle-result">Somebody won!</p>
+							<p class="battle-stat battle-end-message">Click the button at the top left to exit.</p>
+							<div class="battle-rewards">
+								<p class="battle-stat battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+								<p class="battle-stat battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="subsection" id="area-finish" style="display:none;">
+						<div class="forfeit" onclick="forfeitJourney()"></div>
+						<p id="area-finish-title" class="section-title" style="font-size:6em;margin-block:0.5em">Area 0-1 Clear!</p><br><br>
+						<p id="area-finish-desc" class="section-subtitle">You have finished Area 0-1: White Chain.</p>
+						<p class="battle-stat battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+						<p class="battle-stat battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
 					</div>
 
 
