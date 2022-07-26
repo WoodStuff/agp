@@ -11,7 +11,7 @@ const AREAS = [
 			},
 			startDir: DIR.right,
 			data: [ // the map itself
-				's e',
+				's   r w   e',
 			],
 			key: {
 				' ': 'c-path',
