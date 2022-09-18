@@ -173,6 +173,9 @@ const areaVars = {
 		x: 0,
 		y: 0,
 		direction: DIR.up,
+	},
+	battle: {
+		target: 0,
 	}
 }
 
@@ -215,11 +218,13 @@ function progressArea() {
 		areaVars.player.direction = DIR[tileAtBM.name];
 	}
 
+	if (tileAtBM.category == 'control' && tileAtBM.name == 'end') winBattle();
+
 	if (!player.inBattle) {
 		if (tileAtBM.category == 'enemy' && !areaVars.invulnerable) {
 			player.inBattle = true;
-			if (!tileAtBM.name == 'multi') {
-				
+			if (tileAtBM.name == 'multi') {
+				encounterMultiEnemy(tileAtBM.extra);
 			}
 			else {
 				fightEnemy(tileAtBM.name);
@@ -249,8 +254,6 @@ function progressArea() {
 		}
 		areaVars.invulnerable = false;
 	}
-
-	if (tileAtBM.category == 'control' && tileAtBM.name == 'end') winBattle();
 
 	// AM = after movement
 	const tileAtAM = getMeaning(getArea(areaVars.zone, areaVars.area),
@@ -328,7 +331,17 @@ function renderArea() {
 function winBattle() {
 	player.switchTab('area', 'finish');
 
+	player.inBattle = false;
+	player.inArea = false;
+
+	const zone = areaVars.zone;
+	const area = areaVars.area;
+	const areaObj = getArea(zone, area);
+
 	document.getElementById('area-finish-title').innerHTML = `Area ${zone}-${area} Clear!`;
+	document.getElementById('area-finish-desc').innerHTML = `You have finished ${zone}-${area}: ${areaObj.name}`;
+	document.getElementById('area-finish-cr-value').innerHTML = format(areaObj.rewards.currency);
+	document.getElementById('area-finish-xp-value').innerHTML = format(areaObj.rewards.xp);
 }
 
 function forfeitJourney() {

@@ -4,9 +4,11 @@ var battleTurns;
 var pastEHP, pastPHP;
 
 function fightEnemy(id, buff = 1) {
-	let index = player.spawner.content.indexOf(id);
-	if (index > -1) {
-		player.spawner.content.splice(index, 1);
+	if (!player.inArea) {
+		let index = player.spawner.content.indexOf(id);
+		if (index > -1) {
+			player.spawner.content.splice(index, 1);
+		}
 	}
 
 	if (player.inArea) player.switchTab('area', 'fight');

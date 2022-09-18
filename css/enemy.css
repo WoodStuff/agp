@@ -52,23 +52,24 @@ div#enemy-top {
 
 
 /* battle */
-div.battle-player {
-	position: absolute;
-	top: 30%;
-	left: calc(20% - 64px);
+div.battle-player, div.battle-enemy, div.battle-enemy-card {
 	width: 256px;
 }
-div.battle-enemy {
+div.battle-player, div.battle-enemy {
 	position: absolute;
 	top: 30%;
+}
+div.battle-player {
+	left: calc(20% - 64px);
+}
+div.battle-enemy {
 	right: calc(20% - 64px);
-	width: 256px;
 }
 
 img.battle-player-img {
 	transform: translateX(64px);
 }
-img.battle-enemy-img {
+img.battle-enemy-img:not(div.enemycard-imgdiv > img) {
 	transform: translateX(64px);
 }
 
@@ -97,4 +98,39 @@ div.battle-end {
 }
 p.battle-stat span {
 	font-family: monospace;
+}
+
+/* multibattle */
+div#battle-enemies {
+	right: calc(10% - 64px);
+    position: absolute;
+	display: flex;
+    height: calc(100% - 11.5em);
+    justify-content: space-around;
+	flex-direction: column-reverse;
+	flex-wrap: wrap-reverse;
+	align-items: center;
+}
+div.battle-enemy-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+	cursor: pointer;
+	width: 192px;
+	margin: 0 32px;
+}
+div.battle-enemy-card:hover {
+	background-color: #00000020;
+}
+div.battle-enemy-card:active {
+	background-color: #00000040;
+}
+div.battle-enemy-card.target {
+	background-color: #00000040;
+	cursor: default;
+}
+div.subsection#area-multifight > div.battle-player {
+	left: calc(8% - 64px);
+	top: 50%;
+	transform: translateY(-50%);
 }
