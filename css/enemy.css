@@ -54,6 +54,7 @@ div#enemy-top {
 /* battle */
 div.battle-player, div.battle-enemy, div.battle-enemy-card {
 	width: 256px;
+	user-select: none;
 }
 div.battle-player, div.battle-enemy {
 	position: absolute;
