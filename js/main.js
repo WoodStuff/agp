@@ -1,4 +1,7 @@
-var player = new Player();
+/**
+ * The player.
+ */
+const player = new Player();
 const decimalstats = ['currency', 'rocks', 'attack', 'maxhp', 'hp', 'accy', 'block'];
 const objdecimals = { rbu: ['current', 'collect', 'gained'] };
 const allobjdec = ['xp', 'bars', 'items'];
@@ -27,7 +30,7 @@ const tickloop = setInterval(tick, 50);
 
 
 // main stuff
-var updateStats;
+let updateStats;
 function startUpdateStats() {
 	updateStats = setInterval(() => {
 		document.getElementById('currencyDisplay').innerHTML = formatWhole(player.currency);
@@ -111,11 +114,17 @@ function startUpdateStats() {
 }
 
 const autoSave = setInterval(() => {
-	save();
+	//save();
 }, 15000);
 
 
 function fixStuff() {
 	if (typeof player.buffs[0] == 'object') player.buffs = [];
 	if (player.items == undefined) player.items = {};
+	if (player.attack) player.stats = new Stats(player.attack, player.maxhp, player.accy, player.block)
+	if (player.attack != undefined) player.attack = undefined;
+	if (player.maxhp != undefined) player.maxhp = undefined;
+	if (player.hp != undefined) player.hp = undefined;
+	if (player.accy != undefined) player.accy = undefined;
+	if (player.block != undefined) player.block = undefined;
 }

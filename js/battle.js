@@ -1,7 +1,22 @@
-var playerHP, playerMaxHP, playerATK, playerACCY, playerBLK, playerMiss;
-var enemyHP, enemyMaxHP, enemyATK, enemyACCY, enemyBLK, enemyMiss, factor;
-var battleTurns;
-var pastEHP, pastPHP;
+/**
+ * The player's stats in the current enemy fight.
+ * @type {Stats}
+ */
+let playerStats = player.stats;
+
+/**
+ * A list of the enemy stats in the current enemy fight.
+ * 
+ * For a single enemy fight, the stats are in index 0.
+ * @type {Stats[]}
+ */
+let enemyStats = [];
+
+/**
+ * The battle turn interval.
+ * @type {number}
+ */
+let battleTurns;
 
 function fightEnemy(id, buff = 1) {
 	if (!player.inArea) {
@@ -15,20 +30,19 @@ function fightEnemy(id, buff = 1) {
 	else player.switchTab('enemy', 'battle');
 	player.inBattle = true;
 
-	if (!player.inArea) {
-		playerHP = player.maxhp;
-		playerMaxHP = player.maxhp;
-	}
-	playerATK = player.attack;
-	playerACCY = player.accy;
-	playerBLK = player.block;
+	if (!player.inArea) playerStats.HP = player.maxhp; // refill the player's hp
+	playerStats.ATTACK = player.attack;
+	playerStats.MAXHP = player.maxhp;
+	playerStats.ACCURACY = player.accy;
+	playerStats.BLOCK = player.block;
 
-	enemyHP = getEnemy(id).hp.times(buff);
-	enemyMaxHP = getEnemy(id).hp.times(buff);
-	enemyATK = getEnemy(id).atk.times(buff);
-	enemyACCY = getEnemy(id).accy;
-	enemyBLK = getEnemy(id).blk.times(buff);
-	factor = getEnemy(id).accyfactor;
+	enemyStats = [];
+	enemyStats.push(new Stats(
+		getEnemy(id).atk.times(buff),
+		getEnemy(id).hp.times(buff),
+		getEnemy(id).accy,
+		getEnemy(id).blk.times(buff),
+	));
 
 	setByClass('battle-rewards', 'none', 'style', 'display')
 	setByClass('battle-title', `Vs. ${getEnemy(id).name}`, 'innerHTML')
@@ -40,39 +54,42 @@ function fightEnemy(id, buff = 1) {
 	setByClass('battle-enemy-decrease', '0s', 'style', 'transition')
 	setByClass('battle-enemy-decrease', '#00000000', 'style', 'color')
 
-	battleTurns = setInterval(() => { battleTurn(id) }, player.TBA);
+	battleTurns = setInterval(() => { battleTurn(id, 0) }, player.TBA);
 	return true;
 }
 
 function battleTurn(id) {
 	if (!player.inBattle) return false;
 
-	playerMiss = chance(factor.times(100).sub(playerACCY).div(factor).max(0).min(100).mag);
-	enemyMiss = chance(new Decimal(100).sub(enemyACCY).mag);
+	let factor = new Decimal(1); // placeholder, gonna remove in uhhh a few years when areas get to challenging difficulty or something
+	let playerMiss = chance(factor.times(100).minus(playerStats.ACCURACY).div(factor).max(0).min(100).mag);
+	let enemyMiss = chance(new Decimal(100).minus(enemyStats[0].ACCURACY).mag);
 
-	pastEHP = enemyHP;
-	pastPHP = playerHP;
-	if (!playerMiss) enemyHP = enemyHP.sub(Decimal.max(playerATK.sub(enemyBLK), new Decimal(0)));
-	if (!enemyMiss) playerHP = playerHP.sub(Decimal.max(enemyATK.sub(playerBLK), new Decimal(0)));
+	let pastEHP = enemyStats[0].HP;
+	let pastPHP = playerStats.HP;
+	console.log(playerStats.ATTACK, enemyStats[0].ATTACK);
+	if (!playerMiss) enemyStats[0].damage(playerStats.ATTACK, true);
+	if (!enemyMiss) playerStats.damage(enemyStats[0].ATTACK, true);
 
 	customTurns(id);
 
-	if (playerHP.gt(playerMaxHP)) playerHP = playerMaxHP;
+	if (playerStats.HP.gt(playerStats.MAXHP)) playerStats.HP = playerStats.MAXHP;
 	
-	updateBattleStats();
+	const updateStatArglist = [pastPHP, pastEHP, playerMiss, enemyMiss];
+	updateBattleStats(...updateStatArglist);
 
-	if (!(enemyHP.lte(0) || playerHP.lte(0))) return; // battle has ended if continues past this
+	if (!(enemyStats[0].HP.lte(0) || playerStats.HP.lte(0))) return; // battle has ended if continues past this
 
 	clearInterval(battleTurns);
 	setByClass('battle-end', 'block', 'style', 'display');
 	setByClass('battle-end-message', player.inArea ? 'Returning in a bit.' : 'Click the button at the top left to exit.', 'innerHTML')
 	
-	if (enemyHP.lte(0) && !playerHP.lte(0)) win();
-	if (enemyHP.lte(0) && playerHP.lte(0)) {
+	if (enemyStats[0].HP.lte(0) && !playerStats.HP.lte(0)) win();
+	if (enemyStats[0].HP.lte(0) && playerStats.HP.lte(0)) {
 		if (player.inArea) lose();
 		else tie();
 	}
-	if (!enemyHP.lte(0) && playerHP.lte(0)) lose();
+	if (!enemyStats[0].HP.lte(0) && playerStats.HP.lte(0)) lose();
 
 
 	function win(regenerateRBU = true) {
@@ -106,7 +123,7 @@ function battleTurn(id) {
 		setByClass('battle-result', `${getEnemy(id).name} won!`, 'innerHTML');
 
 		if (player.inArea) setTimeout(() => {
-			selectArea();
+			selectZone();
 			player.inArea = false;
 			player.inBattle = false;
 			player.areas.lost++;
@@ -117,24 +134,24 @@ function battleTurn(id) {
 	}
 }
 
-function customTurns(id) {
-	if (player.hasBuff('healthpotion') && chance(25)) playerHP = playerHP.add(1);
+function customTurns(id, number) {
+	if (player.hasBuff('healthpotion') && chance(25)) playerStats.HP = playerStats.HP.add(1);
 }
 
-function updateBattleStats(first = false) {
-	setByClass('battle-player-hp', `${format(playerHP)}/${format(playerMaxHP)} HP`, 'innerHTML');
-	setByClass('battle-player-atk', `${format(playerATK)} ATK`, 'innerHTML');
-	setByClass('battle-player-accy', `${format(playerACCY)} ACCY`, 'innerHTML');
-	setByClass('battle-player-blk', `${format(playerBLK)} BLK`, 'innerHTML');
+function updateBattleStats(pastPHP, pastEHP, playerMiss, enemyMiss) {
+	setByClass('battle-player-hp', `${format(playerStats.HP)}/${format(playerStats.MAXHP)} HP`, 'innerHTML');
+	setByClass('battle-player-atk', `${format(playerStats.ATTACK)} ATK`, 'innerHTML');
+	setByClass('battle-player-accy', `${format(playerStats.ACCURACY)} ACCY`, 'innerHTML');
+	setByClass('battle-player-blk', `${format(playerStats.BLOCK)} BLK`, 'innerHTML');
 
-	setByClass('battle-enemy-hp', `${format(enemyHP)}/${format(enemyMaxHP)} HP`, 'innerHTML');
-	setByClass('battle-enemy-atk', `${format(enemyATK)} ATK`, 'innerHTML');
-	setByClass('battle-enemy-accy', `${format(enemyACCY)} ACCY`, 'innerHTML');
-	setByClass('battle-enemy-blk', `${format(enemyBLK)} BLK`, 'innerHTML');
+	setByClass('battle-enemy-hp', `${format(enemyStats[0].HP)}/${format(enemyStats[0].MAXHP)} HP`, 'innerHTML');
+	setByClass('battle-enemy-atk', `${format(enemyStats[0].ATTACK)} ATK`, 'innerHTML');
+	setByClass('battle-enemy-accy', `${format(enemyStats[0].ACCURACY)} ACCY`, 'innerHTML');
+	setByClass('battle-enemy-blk', `${format(enemyStats[0].BLOCK)} BLK`, 'innerHTML');
 
-	if (first) return true;
-	setByClass('battle-player-decrease', enemyMiss ? 'Missed!' : `${(pastPHP.sub(playerHP)) * -1}`, 'innerHTML');
-	setByClass('battle-enemy-decrease', playerMiss ? 'Missed!' : `${(pastEHP.sub(enemyHP)) * -1}`, 'innerHTML');
+	if (pastPHP == undefined || pastEHP == undefined) return true;
+	setByClass('battle-player-decrease', enemyMiss ? 'Missed!' : `${(pastPHP.minus(playerStats.HP)) * -1}`, 'innerHTML');
+	setByClass('battle-enemy-decrease', playerMiss ? 'Missed!' : `${(pastEHP.minus(enemyStats[0].HP)) * -1}`, 'innerHTML');
 	setByClass('battle-player-decrease', '#00000099', 'style', 'color');
 	setByClass('battle-enemy-decrease', '#00000099', 'style', 'color');
 	setTimeout(decreaseStuff, 200);

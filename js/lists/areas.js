@@ -1,3 +1,7 @@
+/**
+ * A list of all areas in the game. This contains all data for them, including name, layout, rewards etc.
+ * It only requires adding a new area here to add one into the game.
+ */
 const AREAS = [
 	[ // zone 0
 		{
@@ -11,6 +15,7 @@ const AREAS = [
 			},
 			startDir: DIR.right,
 			data: [ // the map itself
+				// 's   r w   e',
 				's e',
 			],
 			key: {
@@ -97,6 +102,9 @@ const AREAS = [
 	],
 ]
 
+/**
+ * A list of zones in the game.
+ */
 const ZONES = [
 	{
 		zone: 0,

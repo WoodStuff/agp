@@ -16,7 +16,7 @@ function randomNumber(min, max) {
 }
 
 function removeValue(array, value) {
-	var index = array.indexOf(value);
+	const index = array.indexOf(value);
 	if (index > -1) {
 		array.splice(index, 1);
 	}

@@ -50,7 +50,7 @@ function format(decimal, precision = 2, small) {
 	if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
 	if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
 	if (decimal.gte("eeee1000")) {
-		var slog = decimal.slog()
+		const slog = decimal.slog()
 		if (slog.gte(1e6)) return "F" + format(slog.floor())
 		else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
 	}

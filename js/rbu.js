@@ -1,4 +1,4 @@
-var rbSelected = 1;
+let rbSelected = 1;
 
 const rbuButton = document.getElementById('collect-rbu');
 const rbShopButton = document.getElementById('buy-rbs');

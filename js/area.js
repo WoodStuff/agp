@@ -1,4 +1,4 @@
-var zoneSelected = 0;
+let zoneSelected = 0;
 
 const canvas = document.createElement('canvas');
 canvas.id = 'area-canvas';
@@ -69,7 +69,7 @@ firstZoneButton.addEventListener('click', () => navigateZone('first'));
 prevZoneButton.addEventListener('click', () => navigateZone('prev'));
 nextZoneButton.addEventListener('click', () => navigateZone('next'));
 lastZoneButton.addEventListener('click', () => navigateZone('last'));
-selectZoneButton.addEventListener('click', selectArea);
+selectZoneButton.addEventListener('click', selectZone);
 areaDiffsButton.addEventListener('click', () => player.switchTab('area', 'diffs'));
 
 function navigateZone(direction) {
@@ -116,7 +116,7 @@ function getDiffDisplay(dp) {
 	return null;
 }
 
-function selectArea() {
+function selectZone() {
 	player.switchTab('area', 'select');
 
 	while (areaContainer.firstChild) {
@@ -179,7 +179,7 @@ const areaVars = {
 	}
 }
 
-var areaTick;
+let areaTick;
 function startArea(zone, area) {
 	player.switchTab('area', 'play');
 	player.inBattle = false; // needed because you can't progress in areas until you battle an enemy if you unfortunately save in an area battle
@@ -192,8 +192,7 @@ function startArea(zone, area) {
 	
 	areaTick = setInterval(progressArea, player.TBM);
 
-	playerHP = player.maxhp;
-	playerMaxHP = player.maxhp;
+	playerStats = player.stats;
 	
 	renderArea();
 }

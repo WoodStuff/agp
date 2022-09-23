@@ -1,5 +1,6 @@
 function load(savefile = 'agpSave') {
 	if (localStorage.getItem(savefile) == null) start();
+	/** @type Player */
 	let save = JSON.parse(decodeURIComponent(escape(atob(localStorage.getItem(savefile)))));
 
 	for (const v in save) {// some random af code i dont understand that converts some strings into decimals because json sucks
@@ -27,6 +28,8 @@ function load(savefile = 'agpSave') {
 	for (const v in save) {
 		player[v] = save[v];
 	}
+
+	player.stats = new Stats(save.stats.attack, save.stats.maxhp, save.stats.accuracy, save.stats.block);
 	
 	const startData = new Player();
 	for (const v in startData) if (player[v] == undefined) player[v] = startData[v];
