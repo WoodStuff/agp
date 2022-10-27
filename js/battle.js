@@ -30,11 +30,11 @@ function fightEnemy(id, buff = 1) {
 	else player.switchTab('enemy', 'battle');
 	player.inBattle = true;
 
-	if (!player.inArea) playerStats.HP = player.maxhp; // refill the player's hp
-	playerStats.ATTACK = player.attack;
-	playerStats.MAXHP = player.maxhp;
-	playerStats.ACCURACY = player.accy;
-	playerStats.BLOCK = player.block;
+	if (!player.inArea) playerStats.HP = player.stats.MAXHP; // refill the player's hp
+	playerStats.ATTACK = player.stats.ATTACK;
+	playerStats.MAXHP = player.stats.MAXHP;
+	playerStats.ACCURACY = player.stats.ACCURACY;
+	playerStats.BLOCK = player.stats.BLOCK;
 
 	enemyStats = [];
 	enemyStats.push(new Stats(
@@ -68,8 +68,8 @@ function battleTurn(id) {
 	let pastEHP = enemyStats[0].HP;
 	let pastPHP = playerStats.HP;
 	console.log(playerStats.ATTACK, enemyStats[0].ATTACK);
-	if (!playerMiss) enemyStats[0].damage(playerStats.ATTACK, true);
-	if (!enemyMiss) playerStats.damage(enemyStats[0].ATTACK, true);
+	if (!playerMiss) enemyStats[0].damage(playerStats.ATTACK);
+	if (!enemyMiss) playerStats.damage(enemyStats[0].ATTACK);
 
 	customTurns(id);
 
@@ -154,19 +154,17 @@ function updateBattleStats(pastPHP, pastEHP, playerMiss, enemyMiss) {
 	setByClass('battle-enemy-decrease', playerMiss ? 'Missed!' : `${(pastEHP.minus(enemyStats[0].HP)) * -1}`, 'innerHTML');
 	setByClass('battle-player-decrease', '#00000099', 'style', 'color');
 	setByClass('battle-enemy-decrease', '#00000099', 'style', 'color');
-	setTimeout(decreaseStuff, 200);
-	return true;
-}
 
-function decreaseStuff() {
-	setByClass('battle-player-decrease', '0.8s', 'style', 'transition');
-	setByClass('battle-enemy-decrease', '0.8s', 'style', 'transition');
-	setByClass('battle-player-decrease', '#00000000', 'style', 'color');
-	setByClass('battle-enemy-decrease', '#00000000', 'style', 'color');
 	setTimeout(() => {
-		setByClass('battle-player-decrease', '0s', 'style', 'transition');
-		setByClass('battle-enemy-decrease', '0s', 'style', 'transition');
-	}, 520)
+		setByClass('battle-player-decrease', '0.8s', 'style', 'transition');
+		setByClass('battle-enemy-decrease', '0.8s', 'style', 'transition');
+		setByClass('battle-player-decrease', '#00000000', 'style', 'color');
+		setByClass('battle-enemy-decrease', '#00000000', 'style', 'color');
+		setTimeout(() => {
+			setByClass('battle-player-decrease', '0s', 'style', 'transition');
+			setByClass('battle-enemy-decrease', '0s', 'style', 'transition');
+		}, 520)
+	}, 200);
 	return true;
 }
 

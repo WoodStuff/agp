@@ -39,6 +39,13 @@ class Stats {
 
 	
 	/**
+	 * Check if the user is dead.
+	 */
+	dead() {
+		return this.HP.lte(0);
+	}
+
+	/**
 	 * Damage the user by the value. Automatically handles block (unless disabled).
 	 * @param {DecimalSource} atk The value to damage by.
 	 * @param {boolean} ignoreBlock Ignores block, resulting in more damage taken.

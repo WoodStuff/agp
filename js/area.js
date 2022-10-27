@@ -176,6 +176,8 @@ const areaVars = {
 	},
 	battle: {
 		target: 0,
+		enemies: [''],
+		alive: [0],
 	}
 }
 
@@ -193,6 +195,7 @@ function startArea(zone, area) {
 	areaTick = setInterval(progressArea, player.TBM);
 
 	playerStats = player.stats;
+	playerStats.HP = player.stats.MAXHP;
 	
 	renderArea();
 }
@@ -217,7 +220,7 @@ function progressArea() {
 		areaVars.player.direction = DIR[tileAtBM.name];
 	}
 
-	if (tileAtBM.category == 'control' && tileAtBM.name == 'end') winBattle();
+	if (tileAtBM.category == 'control' && tileAtBM.name == 'end') winArea();
 
 	if (!player.inBattle) {
 		if (tileAtBM.category == 'enemy' && !areaVars.invulnerable) {
@@ -327,7 +330,7 @@ function renderArea() {
 	requestAnimationFrame(renderArea);
 }
 
-function winBattle() {
+function winArea() {
 	player.switchTab('area', 'finish');
 
 	player.inBattle = false;

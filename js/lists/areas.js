@@ -15,7 +15,7 @@ const AREAS = [
 			},
 			startDir: DIR.right,
 			data: [ // the map itself
-				// 's   r w   e',
+				's   r w   e',
 				's e',
 			],
 			key: {
@@ -87,7 +87,7 @@ const AREAS = [
 				' ': 'c-path',
 				's': 'c-start',
 				'e': 'c-end',
-				':': 'e-multi-greensquare-whitesquare-whitesquare-whitesquare',
+				':': 'e-multi-greensquare-whitesquare',
 			},
 			boss: false,
 			enemies: {

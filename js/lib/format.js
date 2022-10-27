@@ -40,6 +40,10 @@ function sumValues(x) {
 	return x.reduce((a, b) => Decimal.add(a, b))
 }
 
+/**
+ * Format a decimal, automatically chooses a format function.
+ * @param {Decimal} decimal The decimal to format.
+ */
 function format(decimal, precision = 2, small) {
 	small = false;
 	decimal = new Decimal(decimal)
@@ -47,6 +51,7 @@ function format(decimal, precision = 2, small) {
 		player.hasNaN = true;
 		return "NaN"
 	}
+	if (Number.isInteger(decimal.mag) && precision > 0) return format(decimal, 0);
 	if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
 	if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
 	if (decimal.gte("eeee1000")) {

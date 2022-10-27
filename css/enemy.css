@@ -79,6 +79,12 @@ p.battle-player-decrease, p.battle-enemy-decrease {
 	transform: translate(calc(128px - 50%), -1em);
 }
 
+div.battle-enemy-card > p.battle-enemy-decrease {
+	transform: translateX(-50%);
+    position: relative;
+    left: 50%;
+}
+
 p.battle-title, p.battle-result {
 	font-size: 600%;
 }
@@ -129,6 +135,11 @@ div.battle-enemy-card:active {
 div.battle-enemy-card.target {
 	background-color: #00000040;
 	cursor: default;
+}
+div.battle-enemy-card.dead {
+	background-color: #00000000;
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 div.subsection#area-multifight > div.battle-player {
 	left: calc(8% - 64px);
