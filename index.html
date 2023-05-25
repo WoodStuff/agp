@@ -4,6 +4,9 @@
 	<head>
 		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
+		<meta name="description" content="A game. Play now!">
+        <meta name="keywords" content="agp, gaming, game">
+
 		<link rel="stylesheet" href="css/main.css">
 		<link rel="stylesheet" href="css/menu.css">
 
@@ -12,10 +15,20 @@
 		<link rel="stylesheet" href="css/shop.css">
 		<link rel="stylesheet" href="css/rbu.css">
 
+		<script src="js/class/Player.js" defer></script>
+		<script src="js/class/Stats.js" defer></script>
+
 		<script src="js/main.js" defer></script>
 		<script src="js/functions.js" defer></script>
 		<script src="js/saving.js" defer></script>
 		<script src="js/calcstats.js" defer></script>
+
+		<script src="js/enemy.js" defer></script>
+		<script src="js/battle.js" defer></script>
+		<script src="js/area.js" defer></script>
+		<script src="js/areabattle.js" defer></script>
+		<script src="js/shop.js" defer></script>
+		<script src="js/rbu.js" defer></script>
 
 		<script src="js/lists/enemies.js" defer></script>
 		<script src="js/lists/buffs.js" defer></script>
@@ -23,12 +36,6 @@
 		<script src="js/lists/shields.js" defer></script>
 		<script src="js/lists/items.js" defer></script>
 		<script src="js/lists/areas.js" defer></script>
-
-		<script src="js/enemy.js" defer></script>
-		<script src="js/battle.js" defer></script>
-		<script src="js/area.js" defer></script>
-		<script src="js/shop.js" defer></script>
-		<script src="js/rbu.js" defer></script>
 
 		<script src="js/lib/break_eternity.js"></script>
 		<script src="js/lib/format.js"></script>
@@ -50,16 +57,18 @@
 			<div id="game">
 				<div class="section" id="main">
 					<div class="subsection" id="main-main">
-						<div class="tile" id="tile-enemy" onclick="clickTile('enemy');"></div>
-						<div class="tile" id="tile-area" onclick="clickTile('area');"></div>
-						<div class="tile" id="tile-shop" onclick="clickTile('shop');"></div>
-						<div class="tile" id="tile-rbu" onclick="clickTile('rbu');"></div>
+						<div class="tile" id="tile-enemy" onclick="player.clickTile('enemy');"></div>
+						<div class="tile" id="tile-area" onclick="player.clickTile('area');"></div>
+						<div class="tile" id="tile-shop" onclick="player.clickTile('shop');"></div>
+						<div class="tile" id="tile-rbu" onclick="player.clickTile('rbu');"></div>
 					</div>
 				</div>
 
+
+
 				<div class="section" id="enemy" style="display:none;">
 					<div class="subsection" id="enemy-main">
-						<div class="back" onclick="switchTab()"></div>
+						<div class="back" onclick="player.switchTab()"></div>
 						<p id="spawner-tutorial-thingy">Click to toggle enemy spawning!</p>
 						<div id="enemy-top">
 							<div id="enemy-items">
@@ -74,39 +83,44 @@
 							<div id="enemy-field"></div>
 						</div>
 					</div>
+
+
 					<div class="subsection" id="enemy-battle" style="display:none;">
 						<div class="forfeit" onclick="forfeitFight()"></div>
-						<p id="battle-title">Vs. Red Square</p>
-						<div id="battle-player">
-							<p class="battle-stat" id="battle-player-decrease">-1</p>
-							<p class="battle-stat" id="battle-player-hp">10/10</p>
-							<img id="battle-player-img" src="media/player.png">
-							<p class="battle-stat" id="battle-player-atk">2 ATK</p>
-							<p class="battle-stat" id="battle-player-accy">75 ACCY</p>
-							<p class="battle-stat" id="battle-player-blk">0 BLK</p>
+						
+						<p class="battle-title">Vs. Red Square</p>
+						<div class="battle-player">
+							<p class="battle-stat battle-player-decrease">-1</p>
+							<p class="battle-stat battle-player-hp">10/10</p>
+							<img class="battle-player-img" src="media/player.png">
+							<p class="battle-stat battle-player-atk">2 ATK</p>
+							<p class="battle-stat battle-player-accy">75 ACCY</p>
+							<p class="battle-stat battle-player-blk">0 BLK</p>
 						</div>
-						<div id="battle-enemy">
-							<p class="battle-stat" id="battle-enemy-decrease">-1</p>
-							<p class="battle-stat" id="battle-enemy-hp">100/100</p>
-							<img id="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
-							<p class="battle-stat" id="battle-enemy-atk">10 ATK</p>
-							<p class="battle-stat" id="battle-enemy-accy">85 ACCY</p>
-							<p class="battle-stat" id="battle-enemy-blk">5 BLK</p>
+						<div class="battle-enemy">
+							<p class="battle-stat battle-enemy-decrease">-1</p>
+							<p class="battle-stat battle-enemy-hp">100/100</p>
+							<img class="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
+							<p class="battle-stat battle-enemy-atk">10 ATK</p>
+							<p class="battle-stat battle-enemy-accy">85 ACCY</p>
+							<p class="battle-stat battle-enemy-blk">5 BLK</p>
 						</div>
-						<div id="battle-end" style="display:none;">
-							<p id="battle-result">Somebody won!</p>
-							<p class="battle-stat">Click the button at the top left to exit.</p>
-							<div id="battle-rewards">
-								<p class="battle-stat" id="battle-currency-reward">+<span id="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
-								<p class="battle-stat" id="battle-xp-reward">+<span id="b-xp-value">0</span> XP</p>
+						<div class="battle-end" style="display:none;">
+							<p class="battle-result">Somebody won!</p>
+							<p class="battle-end-text battle-end-message">Click the button at the top left to exit.</p>
+							<div class="battle-rewards">
+								<p class="battle-end-text battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+								<p class="battle-end-text battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
 							</div>
 						</div>
 					</div>
 				</div>
 
+
+
 				<div class="section" id="area" style="display:none;">
 					<div class="subsection" id="area-main">
-						<div class="back" onclick="switchTab()"></div>
+						<div class="back" onclick="player.switchTab()"></div>
 						<p class="section-title">Pick a Zone</p>
 
 						<div id="pick-zone">
@@ -120,33 +134,116 @@
 
 							<button id="select-zone">Go to Zone 0</button>
 						</div>
-						<button id="go-to-area-info">Area Information</button>
+						<button id="go-to-area-diffs">Area Difficulty Info</button>
 					</div>
-					<div class="subsection" id="area-select" style="display:none;">
-						<div class="back" onclick="switchTab('area')"></div>
 
-						<div id="area-container"></div>
+
+					<div class="subsection" id="area-select" style="display:none;">
+						<div class="back" onclick="player.switchTab('area')"></div>
+						
+						<p class="section-title">Pick an Area</p>
+
+						<div id="area-box">
+							<div id="area-container"></div>
+							<div id="area-info">
+								<p id="area-info-header" class="section-title">Area Info</p>
+								<i id="area-idesc"></i>
+								<ul id="area-infos"></ul>
+							</div>
+						</div>
 					</div>
+
+
 					<div class="subsection" id="area-play" style="display:none;">
-						<div class="back" onclick="switchTab('area')"></div>
+						<div class="forfeit" onclick="forfeitJourney()"></div>
+						<p id="area-current-title" class="section-title nomargin">Area 0-1: ae</p>
 					</div>
-					<div class="subsection" id="area-info" style="display:none;">
-						<div class="back" onclick="switchTab('area')"></div>
+
+
+					<div class="subsection" id="area-fight" style="display:none;">
+						<div class="forfeit" onclick="forfeitJourney()"></div>
+						<p class="battle-title">Vs. Red Square</p>
+						<div class="battle-player">
+							<p class="battle-stat battle-player-decrease">-1</p>
+							<p class="battle-stat battle-player-hp">10/10</p>
+							<img class="battle-player-img" src="media/player.png">
+							<p class="battle-stat battle-player-atk">2 ATK</p>
+							<p class="battle-stat battle-player-accy">75 ACCY</p>
+							<p class="battle-stat battle-player-blk">0 BLK</p>
+						</div>
+						<div class="battle-enemy">
+							<p class="battle-stat battle-enemy-decrease">-1</p>
+							<p class="battle-stat battle-enemy-hp">100/100</p>
+							<img class="battle-enemy-img" src="media/enemies/redsquare.png" width="128" height="128">
+							<p class="battle-stat battle-enemy-atk">10 ATK</p>
+							<p class="battle-stat battle-enemy-accy">85 ACCY</p>
+							<p class="battle-stat battle-enemy-blk">5 BLK</p>
+						</div>
+						<div class="battle-end" style="display:none;">
+							<p class="battle-result">Somebody won!</p>
+							<p class="battle-end-text battle-end-message">Click the button at the top left to exit.</p>
+							<div class="battle-rewards">
+								<p class="battle-end-text battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+								<p class="battle-end-text battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="subsection" id="area-multifight" style="display:none;">
+						<div class="forfeit" onclick="forfeitJourney()"></div>
+						<p class="battle-title">Vs. Red Square</p>
+						<div class="battle-player">
+							<p class="battle-stat battle-player-decrease">-1</p>
+							<p class="battle-stat battle-player-hp">10/10</p>
+							<img class="battle-player-img" src="media/player.png">
+							<p class="battle-stat battle-player-atk">2 ATK</p>
+							<p class="battle-stat battle-player-accy">75 ACCY</p>
+							<p class="battle-stat battle-player-blk">0 BLK</p>
+						</div>
+						<div id="battle-enemies"></div>
+						<div class="battle-end" style="display:none;">
+							<p class="battle-result">Somebody won!</p>
+							<p class="battle-end-text battle-end-message">Click the button at the top left to exit.</p>
+							<div class="battle-rewards">
+								<p class="battle-end-text battle-currency-reward">+<span class="b-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+								<p class="battle-end-text battle-xp-reward">+<span class="b-xp-value">0</span> XP</p>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="subsection" id="area-finish" style="display:none;">
+						<div class="forfeit" onclick="forfeitJourney()"></div>
+						<p id="area-finish-title" class="section-title" style="font-size:6em;margin-block:0.5em">Area thing Clear!</p><br><br>
+						<p id="area-finish-desc" class="section-subtitle">You have finished Area thing: Thing.</p>
+						<p class="section-subtitle">Click the button at the top left to exit.</p>
+						<p class="battle-stat battle-currency-reward">+<span id="area-finish-cr-value">0</span><img class="icon" title="Currencies" alt="Currencies" src="media/currency.png"></p>
+						<p class="battle-stat battle-xp-reward">+<span id="area-finish-xp-value">0</span> XP</p>
+					</div>
+
+
+					<div class="subsection" id="area-diffs" style="display:none;">
+						<div class="back" onclick="player.switchTab('area')"></div>
 					</div>
 				</div>
 
+
+
 				<div class="section" id="shop" style="display:none;">
 					<div class="subsection" id="shop-main">
-						<div class="back" onclick="switchTab()"></div>
+						<div class="back" onclick="player.switchTab()"></div>
 						<p class="section-title">The Shop</p>
 						<p class="section-subtitle">You get an item for buying in the shop, they're not insta-use.</p>
 						<div id="items"></div>
 					</div>
 				</div>
 
+
+
 				<div class="section" id="rbu" style="display:none;">
 					<div class="subsection" id="rbu-main">
-						<div class="back" onclick="switchTab()"></div>
+						<div class="back" onclick="player.switchTab()"></div>
 						<p class="section-title">You have <span id="rbu-counter">N</span> RBU</p>
 
 						<button id="collect-rbu">+<span id="rbu-per-collect">n</span> RBU</button>
@@ -158,8 +255,10 @@
 
 						<button id="buy-rbs">RB Shop</button>
 					</div>
+
+
 					<div class="subsection" id="rbu-rbshop" style="display:none;">
-						<div class="back" onclick="switchTab()"></div>
+						<div class="back" onclick="player.switchTab()"></div>
 						<p class="section-title">RB Shop</p>
 	
 						<div id="select-rb">
@@ -174,8 +273,10 @@
 							<button id="buy-rb">Buy (<span id="rb-cost">45</span> RBU)</button>
 						</div>
 					</div>
+					
+
 					<div class="subsection" id="rbu-select" style="display:none;">
-						<div id="select-rb-back" class="back" style="display:none;" onclick="switchTab()"></div>
+						<div id="select-rb-back" class="back" style="display:none;" onclick="player.switchTab()"></div>
 	
 						<p class="section-title">Select a Bonus!</p>
 						<p class="section-subtitle">Hover over a bonus to see its effect.</p>

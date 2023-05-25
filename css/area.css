@@ -20,21 +20,109 @@ div#pick-zone > div {
 	left: 50%;
 	transform: translateX(var(--offset));
 }
-button#select-zone, button#go-to-area-info {
+button#select-zone, button#go-to-area-diffs, button.area-box {
 	background-image: url(../media/area\ button.png);
 	border: solid 5px black;
 	height: 10vh;
-	position: absolute;
-	left: 50%;
 	background-size: 100% 100%;
 	font-size: 2em;
 }
 button#select-zone {
 	width: 30vw;
 	transform: translate(calc(-50% + 6px), 64px);
+	position: absolute;
+	left: 50%;
 }
-button#go-to-area-info {
+button#go-to-area-diffs {
 	width: calc(100% - 64px);
 	bottom: 32px;
 	transform: translateX(-50%);
+	position: absolute;
+	left: 50%;
+}
+button.area-box {
+	width: 20vw;
+	min-width: 200px;
+	max-width: 300px;
+	min-height: 10vh;
+	position: relative;
+	padding: 0;
+}
+button.area-box:disabled {
+	filter: grayscale(100%);
+}
+
+div#area-container {
+	display: flex;
+    flex-direction: column;
+    row-gap: 22px;
+    padding: 16px;
+    overflow-y: scroll;
+    height: calc(100vh - 11em);
+}
+div#area-box {
+	position: relative;
+	background-color: #00000025;
+    margin: 8px;
+	display: flex;
+}
+
+div#area-select > p.section-title {
+	margin-block-start: 0.333em;
+}
+
+div#area-container::-webkit-scrollbar {
+	width: 20px;
+}
+div#area-container::-webkit-scrollbar-track {
+	background-color: #00000025;
+}
+div#area-container::-webkit-scrollbar-thumb {
+	background-color: #00000025;
+}
+div#area-container::-webkit-scrollbar-thumb:hover {
+	background-color: #00000015;
+}
+div#area-container::-webkit-scrollbar-thumb:active {
+	background-color: #00000035;
+}
+
+span.area-id {
+	background-color: #00000025;
+	position: absolute;
+	font-size: 0.5em;
+	left: 6px;
+	top: 6px;
+}
+div.area-color {
+    height: 12px;
+    width: inherit;
+    position: absolute;
+    bottom: -17px;
+    left: -5px;
+    border: solid black 3px;
+    border-top: 0;
+    border-radius: 0 0 5px 5px;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+div#area-info {
+	background-color: #00000025;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	height: calc(100% - 20px);
+}
+p#area-info-header {
+	margin-block: 0;
+}
+
+i#area-idesc {
+	display: block;
+	text-align: center;
+	font-size: 1.25em;
+}
+ul#area-infos > li {
+	font-size: 1.1em;
 }

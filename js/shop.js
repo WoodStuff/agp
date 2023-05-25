@@ -94,7 +94,7 @@ function performBuyChecks() {
 function useConsumable(item) {
 	if (getItemCount(item).lt(1)) return;
 
-	if (item == 'squarespawn' && spawnerMaxed()) return;
+	if (item == 'squarespawn' && player.spawnerMaxed()) return;
 
 	player.items[item] = player.items[item].sub(1);
 	if (getItemCount(item).lt(1)) {
@@ -110,7 +110,7 @@ function useConsumable(item) {
 			break;
 
 		case 'rburecharge':
-			addRBU(player.rbu.collect);
+			player.addRBU(player.rbu.collect);
 			break;
 
 		default:

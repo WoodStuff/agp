@@ -10,7 +10,7 @@ const breedEnemies = setInterval(() => {
 }, 1000);
 
 const limitSpawner = setInterval(() => {
-	if (!(player.spawner.content.length > player.spawner.limit)) return;
+	if (!player.spawnerMaxed()) return;
 	player.spawner.content = player.spawner.content.slice(0, player.spawner.limit);
 }, 500);
 
@@ -62,6 +62,7 @@ function renderEnemy(id) {
 	}
 	enemydiv.onclick = function() {
 		this.remove();
+		player.inArea = false; // needed because the background becomes orange if you save in an area battle
 		fightEnemy(this.classList[1].slice(6));
 		return false;
 	}

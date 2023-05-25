@@ -1,4 +1,4 @@
-var rbSelected = 1;
+let rbSelected = 1;
 
 const rbuButton = document.getElementById('collect-rbu');
 const rbShopButton = document.getElementById('buy-rbs');
@@ -8,11 +8,11 @@ const buyRBButton = document.getElementById('buy-rb');
 function gainRBU() {
 	player.rbu.disabled = true;
 	player.rbu.cooldown = 2;
-	addRBU(player.rbu.collect);
+	player.addRBU(player.rbu.collect);
 }
 
 function openRBShop() {
-	switchTab('rbu', 'rbshop');
+	player.switchTab('rbu', 'rbshop');
 }
 
 rbuButton.addEventListener('click', gainRBU);
@@ -65,7 +65,7 @@ function buyRB() {
 	if (player.rbu.current.lt(RBS[rbSelected].cost)) return false;
 	player.rbu.current = player.rbu.current.minus(RBS[rbSelected].cost);
 
-	switchTab('rbu', 'select');
+	player.switchTab('rbu', 'select');
 
 	let pool = buffnames[rbSelected].slice();
 
@@ -104,7 +104,7 @@ function pickBuff(buff) {
 	document.getElementById('picked-buff').style.display = 'block';
 	document.getElementById('select-rb-back').style.display = 'block';
 
-	if (!hasBuff(buff)) {
+	if (!player.hasBuff(buff)) {
 		player.buffs.push(buff);
 	}
 
