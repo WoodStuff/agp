@@ -9,6 +9,7 @@ function encounterMultiEnemy(enemies) {
 	
 	let i = 0;
 	areaVars.battle.enemies = [];
+	areaVars.battle.alive = [];
 	for (const id of enemies) {
 		const enemy = getEnemy(id);
 		areaVars.battle.enemies.push(id);
@@ -62,8 +63,8 @@ function generateEnemyCard(id, number) { // number is which position the enemy i
 	be_imgdiv.style.display = 'flex';
 	be_imgdiv.style.justifyContent = 'center';
 
-	be_img.width = 128;
-	be_img.height = 128;
+	be_img.width = 96;
+	be_img.height = 96;
 	be_img.src = `media/enemies/${id}.png`;
 	be_imgdiv.appendChild(be_img);
 
@@ -100,7 +101,6 @@ function multiBattleTurn() {
 		enemyMiss.push(chance(new Decimal(100).minus(enemy.ACCURACY).mag));
 	}
 
-	console.log(enemyStats, target);
 	let pastEHP = enemyStats[target].HP;
 	let pastPHP = playerStats.HP;
 	if (!playerMiss) enemyStats[target].damage(playerStats.ATTACK);
@@ -110,9 +110,9 @@ function multiBattleTurn() {
 
 	updateAreaBattleStats(target, pastPHP, pastEHP, playerMiss, enemyMiss);
 
-	if (playerStats.dead()) {
+	if (areaVars.battle.alive.length == 0) win();
+	if (playerStats.dead()) lose();
 
-	}
 	let i = 0;
 	for (const enemy of enemyStats) {
 		if (enemy.dead()) {
@@ -121,6 +121,40 @@ function multiBattleTurn() {
 			if (!areaVars.battle.alive.includes(i)) changeTarget(areaVars.battle.alive[0]);
 		}
 		i++;
+	}
+
+
+	function win(regenerateRBU = true) {
+		setByClass('battle-result', 'You won!', 'innerHTML');
+		setByClass('battle-rewards', 'block', 'style', 'display');
+		setByClass('b-cr-value', format(getEnemy(id).curr), 'innerHTML');
+		setByClass('b-xp-value', format(getEnemy(id).xp), 'innerHTML');
+
+		if (player.inArea) setTimeout(() => {
+			player.switchTab('area', 'play');
+			player.inBattle = false;
+			setByClass('battle-end', 'none', 'style', 'display');
+			areaVars.invulnerable = true;
+		}, player.TBA * 1.5);
+
+		player.addCurrency(getEnemy(id).curr);
+		player.addXP(getEnemy(id).xp);
+
+		if (player.rbu.disabled && regenerateRBU) player.rbu.cooldown--;
+	}
+	function lose() {
+		setByClass('battle-end', 'block', 'style', 'display');
+		setByClass('battle-result', `The enemies won!`, 'innerHTML');
+
+		if (player.inArea) setTimeout(() => {
+			selectZone();
+			player.inArea = false;
+			player.inBattle = false;
+			player.areas.lost++;
+		}, player.TBA * 199.5);
+
+		player.areas.total++;
+		player.areas.lost++;
 	}
 }
 

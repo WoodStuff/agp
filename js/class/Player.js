@@ -2,7 +2,6 @@ class Player {
 	constructor() {
 		/** @type {Decimal} */
 		this.currency = new Decimal(50);
-		/** @type {object} */
 		this.xp = {
 			level: new Decimal(1),
 			current: new Decimal(0),
@@ -11,7 +10,6 @@ class Player {
 		};
 		/** @type {Stats} */
 		this.stats = new Stats(2, 10, 75, 0);
-		/** @type {object} */
 		this.rbu = {
 			current: new Decimal(0),
 			collect: new Decimal(15),
@@ -39,23 +37,19 @@ class Player {
 		this.tilesUnlocked = [
 			'enemy',
 		];
-		/** @type {object} */
 		this.items = {};
-		/** @type {object} */
 		this.battles = {
 			total: 0,
 			won: 0,
 			tied: 0,
 			lost: 0,
 		};
-		/** @type {object} */
 		this.areas = {
 			total: 0,
 			won: 0,
 			lost: 0,
 			progress: [0, 0], // this tells which area the savefile HAS YET to beat, not the last area beaten
 		};
-		/** @type {object} */
 		this.spawner = {
 			on: false,
 			level: 1,
@@ -64,7 +58,6 @@ class Player {
 		};
 		/** @type {string[]} */
 		this.buffs = [];
-		/** @type {object} */
 		this.bars = {
 			basic: {
 				progress: new Decimal(0),
@@ -137,12 +130,10 @@ class Player {
 	}
 	/**
 	 * Get how much buffs boost the basic 4 stats.
-	 * @returns {{atk: Decimal, hp: Decimal, accy: Decimal, blk: Decimal}} An object with the 4 basic stats having how much each stat gets boosted by buffs.
+	 * @returns {Stats} An object with the 4 basic stats having how much each stat gets boosted by buffs.
 	 */
 	getBuffStats() {
-		let stats = {
-			atk: d(0), hp: d(0), accy: d(0), blk: d(0),
-		}
+		let stats = new Stats();
 		if ((!this.buffs.length == 0 || typeof this == 'undefined')) {
 			for (const buff of this.buffs) {
 				stats.ATTACK = stats.ATTACK.plus(BUFFS[buff].atk);

@@ -196,6 +196,8 @@ function startArea(zone, area) {
 
 	playerStats = player.stats;
 	playerStats.HP = player.stats.MAXHP;
+
+	setByClass('battle-player-decrease', 'none', 'style', 'display');
 	
 	renderArea();
 }

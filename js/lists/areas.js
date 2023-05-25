@@ -87,7 +87,7 @@ const AREAS = [
 				' ': 'c-path',
 				's': 'c-start',
 				'e': 'c-end',
-				':': 'e-multi-greensquare-whitesquare',
+				':': 'e-multi-greensquare-whitesquare-bluesquare-bluesquare',
 			},
 			boss: false,
 			enemies: {
