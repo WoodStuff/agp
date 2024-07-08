@@ -58,7 +58,7 @@ function hardReset(savefile = 'agpSave') {
 	location.reload();
 	return p;
 }
-function firststart(savefile = 'agpSave') {
+function pageLoad(savefile = 'agpSave') {
 	if (localStorage.getItem(savefile) != null) { // if the savefile exists
 		load();
 		fixStuff();

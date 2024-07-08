@@ -43,11 +43,11 @@ function startUpdateStats() {
 
 		if (!(player.inBattle || player.inArea)) {
 			console.log('a');
-			player.attack = calcstats.attack();
-			player.maxhp = calcstats.hp();
-			player.hp = calcstats.hp();
-			player.accy = calcstats.accy();
-			player.block = calcstats.block();
+			player.stats.ATTACK = calcstats.attack();
+			player.stats.MAXHP = calcstats.hp();
+			player.stats.HP = calcstats.hp();
+			player.stats.ACCURACY = calcstats.accy();
+			player.stats.BLOCK = calcstats.block();
 		}
 
 		const counts = document.getElementsByClassName('consumable-count');
@@ -114,7 +114,7 @@ function startUpdateStats() {
 }
 
 const autoSave = setInterval(() => {
-	//save();
+	save();
 }, 15000);
 
 
